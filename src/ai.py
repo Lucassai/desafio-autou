@@ -2,9 +2,21 @@ import os
 import re
 from typing import Dict, Any
 
+# Carregar variáveis de ambiente
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
+
+try:
+    import openai
+except ImportError:
+    openai = None
 
 _PRODUCTIVE_KEYWORDS = {
     "concl", "finaliz", "deploy", "deploy", "produç", "staging", "pr",
@@ -18,27 +30,18 @@ _UNPRODUCTIVE_KEYWORDS = {
     "achei", "só", "ok", "ignore"
 }
 
-try:
-    from openai import OpenAI
-except ImportError:
-    try:
-        import openai
-    except Exception:
-        openai = None
-
+# Configurar OpenAI
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+
+if OPENAI_API_KEY and openai:
+    try:
+        openai.api_key = OPENAI_API_KEY
+    except Exception as e:
+        print(f"Aviso: Erro ao configurar chave OpenAI: {e}")
+
 STOPWORDS_PT = set(stopwords.words("portuguese"))
 STEMMER = SnowballStemmer("portuguese")
-
-if OPENAI_API_KEY:
-    try:
-        client = OpenAI(api_key=OPENAI_API_KEY)
-    except Exception as e:
-        print(f"Aviso: Erro ao inicializar cliente OpenAI: {e}")
-        client = None
-else:
-    client = None
 
 _nltk_needed = ["punkt_tab", "stopwords"]
 for pkg in _nltk_needed:
@@ -101,10 +104,10 @@ def rule_based_classify(text: str) -> Dict[str, Any]:
 def generate_reply_smart(original_text: str, category: str, use_openai: bool = True) -> str:
     """
     Generate suggested reply based on category.
-     - if use_openai=True and client is configured, use OpenAI API;
+     - if use_openai=True and OPENAI_API_KEY is set, use OpenAI API;
      - else, it returns a pre-defined reply.
     """
-    if use_openai and client is not None:
+    if use_openai and OPENAI_API_KEY and openai:
         try:
             prompt = (
                 f"Você é um assistente que escreve respostas em português.\n"
@@ -112,11 +115,11 @@ def generate_reply_smart(original_text: str, category: str, use_openai: bool = T
                 f"com tom profissional e finalize com 'Atenciosamente,\\nEquipe'.\n\n"
                 f"EMAIL:\n{original_text}\n\nRESPONDA:"
             )
-            response = client.chat.completions.create(
+            response = openai.ChatCompletion.create(
                 model=OPENAI_MODEL,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.0,
-                max_tokens=250 #1245
+                max_tokens=250
             )
             return response.choices[0].message.content.strip()
         except Exception as e:
