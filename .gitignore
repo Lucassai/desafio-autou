@@ -1,0 +1,19 @@
+# Ambiente
+.env
+.env.local
+venv/
+__pycache__/
+
+# Dados
+*.json
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.pyc
+*.pyo
+
+# Outros
+.DS_Store
+*.log

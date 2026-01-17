@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='/css/styles.css') }}"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="header">
+      <div>
+        <img
+          id="logo"
+          src="{{ url_for('static', filename='/img/logo-autou.webp') }}"
+          alt="Icone"
+        />
+      </div>
+
+      <div id="search-bar">
+        <img
+          src="{{ url_for('static', filename='/img/search.svg') }}"
+          alt="Search"
+        />
+        <input type="text" placeholder="Search..." />
+      </div>
+
+      <div>
+        <img
+          src="{{ url_for('static', filename='/img/profile.svg') }}"
+          alt=""
+        />
+      </div>
+    </div>
+
+    <h1>Fale Conosco</h1>
+    <span>Deixei aqui a sua mensagem para os nossos colaboradores</span>
+
+    {% if error %}
+    <p style="color: red; font-weight: bold">{{ error }}</p>
+    {% endif %}
+
+    <form action="/submit" method="post">
+      <label for="name">Nome:</label>
+      <input type="text" id="name" name="name" required />
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+      <label for="subject">Assunto:</label>
+      <input type="text" id="subject" name="subject" required />
+      <label for="message">Mensagem:</label>
+      <textarea id="message" name="message" required></textarea>
+      <br />
+      <input type="submit" value="Enviar" />
+    </form>
+    {% if result_text %}
+    <p style="color: green; font-weight: bold">{{ result_text }}</p>
+    {% endif %}
+  </body>
+</html>
