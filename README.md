@@ -84,6 +84,7 @@ python test_openai.py
 ```
 
 Você deve ver:
+
 ```
 ✓ OPENAI_API_KEY encontrada
 ✓ Modelo: gpt-3.5-turbo
@@ -130,12 +131,15 @@ gunicorn wspi:app
 ## 🔗 API Endpoints
 
 ### `GET /`
+
 Retorna a página inicial com formulário
 
 ### `POST /submit`
+
 Recebe dados do formulário e salva
 
 **Body:**
+
 ```json
 {
   "name": "João Silva",
@@ -146,10 +150,12 @@ Recebe dados do formulário e salva
 ```
 
 **Response:**
+
 - Status 200: Dados salvos com sucesso
 - Status 400: Campos obrigatórios faltando
 
 ### `GET /api/dados`
+
 Retorna todos os dados salvos em JSON
 
 ```bash
@@ -157,6 +163,7 @@ curl http://localhost:5000/api/dados
 ```
 
 ### `GET /api/ultimo-dado`
+
 Retorna o último formulário submetido
 
 ```bash
@@ -164,6 +171,7 @@ curl http://localhost:5000/api/ultimo-dado
 ```
 
 ### `GET /api/dados/<email>`
+
 Retorna todos os dados de um email específico
 
 ```bash
@@ -187,6 +195,7 @@ print(f"Resposta: {resultado['suggested_reply']}")
 ```
 
 **Output:**
+
 ```
 Categoria: Produtivo
 Confiança: 0.85
@@ -213,32 +222,36 @@ for msg in dados_joao:
 ```javascript
 // Buscar todos os dados
 fetch('/api/dados')
-  .then(res => res.json())
-  .then(dados => console.log(dados))
+  .then((res) => res.json())
+  .then((dados) => console.log(dados))
 
 // Buscar último dado
 fetch('/api/ultimo-dado')
-  .then(res => res.json())
-  .then(dado => console.log(dado))
+  .then((res) => res.json())
+  .then((dado) => console.log(dado))
 
 // Buscar por email
 fetch('/api/dados/joao@example.com')
-  .then(res => res.json())
-  .then(dados => console.log(dados))
+  .then((res) => res.json())
+  .then((dados) => console.log(dados))
 ```
 
 ## 🔍 Funções Principais (`src/ai.py`)
 
 ### `clean_text(text: str) -> str`
+
 Remove emails, URLs e caracteres especiais do texto
 
 ### `preprocess_text(text: str) -> str`
+
 Preprocessamento completo: limpeza, tokenização, remoção de stopwords e stemming
 
 ### `rule_based_classify(text: str) -> Dict`
+
 Classificação por palavras-chave
 
 **Retorna:**
+
 ```json
 {
   "category": "Produtivo|Improdutivo",
@@ -248,12 +261,15 @@ Classificação por palavras-chave
 ```
 
 ### `generate_reply_smart(text: str, category: str, use_openai: bool) -> str`
+
 Gera resposta sugerida usando OpenAI ou palavras-chave pré-definidas
 
 ### `process_email_message(email_text: str, use_openai_for_reply: bool) -> Dict`
+
 Processa email completo com classificação e geração de resposta
 
 **Retorna:**
+
 ```json
 {
   "original_text": "...",
@@ -266,20 +282,25 @@ Processa email completo com classificação e geração de resposta
 ```
 
 ### `salvar_dados(dados: Dict) -> bool`
+
 Salva dados em `dados_formulario.json`
 
 ### `carregar_dados() -> List[Dict]`
+
 Carrega todos os dados salvos
 
 ### `obter_ultimo_dado() -> Dict`
+
 Retorna o último dado salvo
 
 ### `obter_dados_por_email(email: str) -> List[Dict]`
+
 Retorna dados de um email específico
 
 ## 🏷️ Palavras-Chave para Classificação
 
 ### Produtivas
+
 ```
 concluir, finalizar, deploy, produção, staging, pull request,
 entregar, implementar, agendar, reunião, relatório, métrica,
@@ -288,6 +309,7 @@ deadline, próximo, ação, entrega
 ```
 
 ### Improdutivas
+
 ```
 bom, tudo, final, semana, parabéns, testando, oi, olá,
 social, abraço, obrigado, curtir, conversa, marcar, quer,
@@ -305,6 +327,7 @@ pip install openai
 ### Erro: "OPENAI_API_KEY not found"
 
 Verifique se o arquivo `.env` existe e contém:
+
 ```
 OPENAI_API_KEY=sk-proj-sua-chave
 ```
@@ -332,6 +355,7 @@ Aguarde alguns segundos antes de fazer nova requisição. Considere plano pago n
 ## 📚 Tecnologias
 
 ### Backend
+
 - **Python 3.14** - Linguagem principal
 - **Flask 3.1.2** - Framework web
 - **OpenAI 1.51.2** - Integração com GPT-3.5-turbo
@@ -341,15 +365,18 @@ Aguarde alguns segundos antes de fazer nova requisição. Considere plano pago n
 - **SciPy 1.17.0** - Computação científica
 
 ### Frontend
+
 - **HTML5** - Markup
 - **CSS3** - Estilos
 - **JavaScript Vanilla** - Interatividade
 
 ### Deployment
+
 - **Gunicorn 23.0.0** - Servidor WSGI
 - **Python venv** - Ambiente isolado
 
 ### Utilitários
+
 - **python-dotenv 1.2.1** - Carregamento de variáveis de ambiente
 
 ## 📝 Dependências Completas
@@ -392,6 +419,7 @@ Encontrou um problema? Abra uma issue em: https://github.com/Lucassai/desafio-au
 ## 📅 Changelog
 
 ### v1.0.0 (17/01/2026)
+
 - ✨ Implementação inicial do sistema
 - 🤖 Integração com OpenAI GPT-3.5-turbo
 - 📊 Classificação de emails por palavras-chave
@@ -402,4 +430,4 @@ Encontrou um problema? Abra uma issue em: https://github.com/Lucassai/desafio-au
 
 ---
 
-**Desenvolvido com ❤️ pela AutoU Team**
+**Desenvolvido com ❤️ por Lucas Oliveira**
